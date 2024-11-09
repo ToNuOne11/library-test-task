@@ -3,6 +3,7 @@ package ru.SMSfinance.library_test_task.api.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.SMSfinance.library_test_task.api.dto.AckDto;
 import ru.SMSfinance.library_test_task.api.dto.BookDto;
 import ru.SMSfinance.library_test_task.api.factories.BookDtoFactory;
 import ru.SMSfinance.library_test_task.api.services.BookService;
@@ -50,4 +51,8 @@ public class BookController {
         return bookService.updateBook(book_id,  optionalTitle,  optionalAuthor,  optionalPublishedDate);
     }
 
+    @DeleteMapping(DELETE_BOOK)
+    public AckDto deleteBook(@PathVariable Long book_id){
+        return bookService.deleteBook(book_id);
+    }
 }

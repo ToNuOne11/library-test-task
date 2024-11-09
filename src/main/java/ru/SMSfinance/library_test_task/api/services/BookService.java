@@ -2,6 +2,7 @@ package ru.SMSfinance.library_test_task.api.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.SMSfinance.library_test_task.api.dto.AckDto;
 import ru.SMSfinance.library_test_task.api.dto.BookDto;
 import ru.SMSfinance.library_test_task.api.exeptions.BadRequestException;
 import ru.SMSfinance.library_test_task.api.exeptions.NotFoundException;
@@ -76,6 +77,14 @@ public class BookService {
         book = bookRepository.saveAndFlush(book);
 
         return bookDtoFactory.makeBookDto(book);
+    }
+
+    public AckDto deleteBook(Long id) {
+        BookEntity book = getBookOrThrowException(id);
+
+        bookRepository.delete(book);
+
+        return AckDto.makeDefault(true);
     }
 
     private BookEntity getBookOrThrowException(Long id) {
