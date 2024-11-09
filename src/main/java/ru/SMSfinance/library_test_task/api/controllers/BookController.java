@@ -1,5 +1,6 @@
 package ru.SMSfinance.library_test_task.api.controllers;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Tag(name = "book_methods")
 @RestController
 @RequiredArgsConstructor
 public class BookController {
