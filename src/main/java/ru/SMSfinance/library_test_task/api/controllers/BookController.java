@@ -10,6 +10,7 @@ import ru.SMSfinance.library_test_task.store.entities.BookEntity;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,4 +40,14 @@ public class BookController {
             @RequestParam(name = "published_date") LocalDate publishedDate) {
         return bookService.createBook(title, author, publishedDate);
     }
+
+    @PatchMapping(UPDATE_BOOK)
+    public BookDto updateBook(
+            @PathVariable Long book_id,
+            @RequestParam(name = "title", required = false) Optional<String> optionalTitle,
+            @RequestParam(name = "author", required = false) Optional<String> optionalAuthor,
+            @RequestParam(name = "published_date", required = false) Optional<LocalDate> optionalPublishedDate) {
+        return bookService.updateBook(book_id,  optionalTitle,  optionalAuthor,  optionalPublishedDate);
+    }
+
 }

@@ -12,6 +12,7 @@ import ru.SMSfinance.library_test_task.store.repositories.BookRepository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,18 +32,15 @@ public class BookService {
     }
 
     public BookDto findBookById(Long id) {
-        return bookDtoFactory.makeBookDto(bookRepository.findById(id)
-                .orElseThrow(() ->
-                        new NotFoundException("Book not found")
-                )
-        );
+        return bookDtoFactory.makeBookDto(getBookOrThrowException(id));
     }
+
 
     public BookDto createBook(String title, String author, LocalDate publishedDate) {
         if (title.isBlank()) {
             throw new BadRequestException("Title is empty");
         }
-        if(Objects.nonNull(bookRepository.findByTitleAndAuthor(title, author))){
+        if (Objects.nonNull(bookRepository.findByTitleAndAuthor(title, author))) {
             throw new BadRequestException("Book already exists.");
         }
         final BookEntity book = bookRepository.saveAndFlush(
@@ -54,5 +52,36 @@ public class BookService {
         );
 
         return bookDtoFactory.makeBookDto(book);
+    }
+
+    public BookDto updateBook(Long id, Optional<String> optionalTitle, Optional<String> optionalAuthor, Optional<LocalDate> optionalPublishedDate) {
+
+        BookEntity book = getBookOrThrowException(id);
+
+        if (optionalTitle.isPresent()) {
+            book.setTitle(optionalTitle.get());
+        }
+        if (optionalAuthor.isPresent()) {
+            book.setAuthor(optionalAuthor.get());
+        }
+        if (optionalPublishedDate.isPresent()) {
+            book.setPublishedDate(optionalPublishedDate.get());
+        }
+
+        Optional<BookEntity> optionalBookEntity = Optional.ofNullable(bookRepository.findByTitleAndAuthor(book.getTitle(), book.getAuthor()));
+        if (optionalBookEntity.isPresent() && !Objects.equals(id, optionalBookEntity.get().getId())) {
+            throw new BadRequestException("Book already exists.");
+        }
+
+        book = bookRepository.saveAndFlush(book);
+
+        return bookDtoFactory.makeBookDto(book);
+    }
+
+    private BookEntity getBookOrThrowException(Long id) {
+        return bookRepository.findById(id)
+                .orElseThrow(() ->
+                        new NotFoundException("Book not found")
+                );
     }
 }
