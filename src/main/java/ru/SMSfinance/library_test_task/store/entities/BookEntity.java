@@ -17,13 +17,13 @@ public class BookEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(name = "title", columnDefinition = "text")
+    @Column(name = "title", columnDefinition = "text", nullable = false)
     private String title;
 
-    @Column(name = "author", columnDefinition = "text")
+    @Column(name = "author", columnDefinition = "text", nullable = false)
     private String author;
 
-    @Column(name = "publishedDate")
+    @Column(name = "publishedDate", nullable = false)
     private LocalDate publishedDate;
 
 }

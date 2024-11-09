@@ -42,7 +42,7 @@ public class BookService {
         if (title.isBlank()) {
             throw new BadRequestException("Title is empty");
         }
-        if(Objects.nonNull(bookRepository.findByTitle(title))){
+        if(Objects.nonNull(bookRepository.findByTitleAndAuthor(title, author))){
             throw new BadRequestException("Book already exists.");
         }
         final BookEntity book = bookRepository.saveAndFlush(
