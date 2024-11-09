@@ -1,4 +1,4 @@
-package ru.SMSfinance.library_test_task.store.entity;
+package ru.SMSfinance.library_test_task.store.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -6,7 +6,7 @@ import lombok.*;
 import java.time.Instant;
 
 @Entity
-@Table(name = "books")
+@Table(name = "book")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,12 +15,11 @@ import java.time.Instant;
 public class BookEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
     private Long id;
-    @Column(name = "title")
+    @Column(name = "title", columnDefinition = "text")
     private String title;
 
-    @Column(name = "author")
+    @Column(name = "author", columnDefinition = "text")
     private String author;
 
     @Builder.Default
