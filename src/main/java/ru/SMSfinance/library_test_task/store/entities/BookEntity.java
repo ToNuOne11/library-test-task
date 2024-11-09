@@ -3,7 +3,8 @@ package ru.SMSfinance.library_test_task.store.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.Instant;
+import java.time.LocalDate;
+
 
 @Entity
 @Table(name = "book")
@@ -22,7 +23,7 @@ public class BookEntity {
     @Column(name = "author", columnDefinition = "text")
     private String author;
 
-    @Builder.Default
-    private Instant publishedDate = Instant.now();
+    @Column(name = "publishedDate")
+    private LocalDate publishedDate;
 
 }

@@ -10,7 +10,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
+import java.time.LocalDate;
+
 
 
 @Data
@@ -27,6 +28,6 @@ public class BookDto {
     private String author;
 
     @JsonProperty("published_date")
-    private Instant publishedDate;
+    private LocalDate publishedDate;
 
 }
