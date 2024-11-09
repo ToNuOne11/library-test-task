@@ -25,4 +25,12 @@ public class BookService {
         }
         return books;
     }
+
+    public BookDto findBookById(Long id) {
+        return bookDtoFactory.makeBookDto(bookRepository.findById(id)
+                .orElseThrow(() ->
+                        new NotFoundException("Book not found")
+                )
+        );
+    }
 }
