@@ -44,6 +44,7 @@ public class BookController {
             @RequestParam(name = "title") String title,
             @RequestParam(name = "author") String author,
             @RequestParam(name = "published_date") LocalDate publishedDate) {
+        messageSender.sendCreateBookMessage(title, author, publishedDate);
         return bookService.createBook(title, author, publishedDate);
     }
 
