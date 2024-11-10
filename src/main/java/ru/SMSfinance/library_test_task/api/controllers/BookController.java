@@ -3,6 +3,7 @@ package ru.SMSfinance.library_test_task.api.controllers;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.SMSfinance.library_test_task.api.dto.AckDto;
@@ -11,6 +12,7 @@ import ru.SMSfinance.library_test_task.api.factories.BookDtoFactory;
 import ru.SMSfinance.library_test_task.api.services.BookService;
 import ru.SMSfinance.library_test_task.api.services.MessageSender;
 import ru.SMSfinance.library_test_task.store.entities.BookEntity;
+import ru.SMSfinance.library_test_task.store.repositories.BookRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -40,26 +42,24 @@ public class BookController {
     }
 
     @PostMapping(CREATE_BOOK)
-    public BookDto createBook(
+    public AckDto createBook(
             @RequestParam(name = "title") String title,
             @RequestParam(name = "author") String author,
             @RequestParam(name = "published_date") LocalDate publishedDate) {
-        messageSender.sendCreateBookMessage(title, author, publishedDate);
-        return bookService.createBook(title, author, publishedDate);
+        return messageSender.sendCreateBookMessage(title, author, publishedDate);
     }
 
     @PatchMapping(UPDATE_BOOK)
-    public BookDto updateBook(
+    public AckDto updateBook(
             @PathVariable Long book_id,
-            @RequestParam(name = "title", required = false) Optional<String> optionalTitle,
-            @RequestParam(name = "author", required = false) Optional<String> optionalAuthor,
-            @RequestParam(name = "published_date", required = false) Optional<LocalDate> optionalPublishedDate) {
-        return bookService.updateBook(book_id,  optionalTitle,  optionalAuthor,  optionalPublishedDate);
+            @RequestParam(name = "title") String title,
+            @RequestParam(name = "author") String author,
+            @RequestParam(name = "published_date") String publishedDate) {
+        return messageSender.sendUpdateBookMessage(book_id, title, author, publishedDate);
     }
 
     @DeleteMapping(DELETE_BOOK)
     public AckDto deleteBook(@PathVariable Long book_id){
-        messageSender.sendDeleteBookMessage(book_id);
-        return AckDto.makeDefault(true);
+        return messageSender.sendDeleteBookMessage(book_id);
     }
 }

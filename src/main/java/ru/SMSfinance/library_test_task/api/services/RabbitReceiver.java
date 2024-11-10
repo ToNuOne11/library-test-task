@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import ru.SMSfinance.library_test_task.api.dto.AckDto;
 import ru.SMSfinance.library_test_task.api.exeptions.NotFoundException;
 
+import java.time.LocalDate;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -21,9 +23,11 @@ public class RabbitReceiver {
         try {
             log.info(message);
             if (message.startsWith("CREATE:")) {
-                bookService.createBook(null, null, null);
+                String [] strings = message.split(":");
+                bookService.createBook(strings[1], strings[2], LocalDate.parse(strings[3]));
             } else if (message.startsWith("UPDATE:")) {
-                bookService.updateBook(1L, null, null, null);
+                String [] strings = message.split(":");
+                bookService.updateBook(Long.valueOf(strings[1]), strings[2], strings[3], strings[4]);
             } else if (message.startsWith("DELETE:")) {
                 bookService.deleteBook(Long.valueOf(message.split(":")[1]));
             }

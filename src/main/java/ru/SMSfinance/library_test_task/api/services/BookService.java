@@ -42,9 +42,15 @@ public class BookService {
         if (title.isBlank()) {
             throw new BadRequestException("Title is empty");
         }
+
+        if (author.isBlank()) {
+            throw new BadRequestException("Author is empty");
+        }
+
         if (Objects.nonNull(bookRepository.findByTitleAndAuthor(title, author))) {
             throw new BadRequestException("Book already exists.");
         }
+
         final BookEntity book = bookRepository.saveAndFlush(
                 BookEntity.builder()
                         .title(title)
@@ -57,18 +63,24 @@ public class BookService {
     }
 
     @Transactional
-    public BookDto updateBook(Long id, Optional<String> optionalTitle, Optional<String> optionalAuthor, Optional<LocalDate> optionalPublishedDate) {
+    public BookDto updateBook(Long id, String title, String author, String publishedDate) {
 
         BookEntity book = getBookOrThrowException(id);
 
-        if (optionalTitle.isPresent()) {
-            book.setTitle(optionalTitle.get());
+        if (!title.isBlank()) {
+            book.setTitle(title);
         }
-        if (optionalAuthor.isPresent()) {
-            book.setAuthor(optionalAuthor.get());
+        if (!author.isBlank()) {
+            book.setAuthor(title);
         }
-        if (optionalPublishedDate.isPresent()) {
-            book.setPublishedDate(optionalPublishedDate.get());
+        if (!publishedDate.isBlank()) {
+            try {
+                book.setPublishedDate(LocalDate.parse(publishedDate));
+            }
+            catch (BadRequestException e) {
+                throw new BadRequestException("Date is incorrect");
+            }
+
         }
 
         Optional<BookEntity> optionalBookEntity = Optional.ofNullable(bookRepository.findByTitleAndAuthor(book.getTitle(), book.getAuthor()));
