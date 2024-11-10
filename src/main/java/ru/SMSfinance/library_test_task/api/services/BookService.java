@@ -1,5 +1,6 @@
 package ru.SMSfinance.library_test_task.api.services;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.SMSfinance.library_test_task.api.dto.AckDto;
@@ -20,7 +21,7 @@ import java.util.Optional;
 public class BookService {
     private final BookRepository bookRepository;
     private final BookDtoFactory bookDtoFactory;
-
+    @Transactional
     public List<BookDto> findAllBooks() {
         List<BookDto> books = bookRepository.findAll()
                 .stream()
@@ -31,12 +32,12 @@ public class BookService {
         }
         return books;
     }
-
+    @Transactional
     public BookDto findBookById(Long id) {
         return bookDtoFactory.makeBookDto(getBookOrThrowException(id));
     }
 
-
+    @Transactional
     public BookDto createBook(String title, String author, LocalDate publishedDate) {
         if (title.isBlank()) {
             throw new BadRequestException("Title is empty");
@@ -55,6 +56,7 @@ public class BookService {
         return bookDtoFactory.makeBookDto(book);
     }
 
+    @Transactional
     public BookDto updateBook(Long id, Optional<String> optionalTitle, Optional<String> optionalAuthor, Optional<LocalDate> optionalPublishedDate) {
 
         BookEntity book = getBookOrThrowException(id);
@@ -79,6 +81,7 @@ public class BookService {
         return bookDtoFactory.makeBookDto(book);
     }
 
+    @Transactional
     public AckDto deleteBook(Long id) {
         BookEntity book = getBookOrThrowException(id);
 

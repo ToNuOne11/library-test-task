@@ -25,5 +25,4 @@ public class BookEntity {
 
     @Column(name = "publishedDate", nullable = false)
     private LocalDate publishedDate;
-
 }

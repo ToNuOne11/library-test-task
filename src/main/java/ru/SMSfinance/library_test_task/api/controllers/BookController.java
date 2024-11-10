@@ -2,12 +2,14 @@ package ru.SMSfinance.library_test_task.api.controllers;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.SMSfinance.library_test_task.api.dto.AckDto;
 import ru.SMSfinance.library_test_task.api.dto.BookDto;
 import ru.SMSfinance.library_test_task.api.factories.BookDtoFactory;
 import ru.SMSfinance.library_test_task.api.services.BookService;
+import ru.SMSfinance.library_test_task.api.services.MessageSender;
 import ru.SMSfinance.library_test_task.store.entities.BookEntity;
 
 import java.time.LocalDate;
@@ -19,6 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BookController {
     private final BookService bookService;
+    private final MessageSender messageSender;
 
     public static final String GET_ALL_BOOKS = "/api/books";
     public static final String GET_BOOK_BY_ID = "/api/books/{book_id}";
@@ -41,6 +44,7 @@ public class BookController {
             @RequestParam(name = "title") String title,
             @RequestParam(name = "author") String author,
             @RequestParam(name = "published_date") LocalDate publishedDate) {
+        messageSender.sendCreateBookMessage(title, author, publishedDate);
         return bookService.createBook(title, author, publishedDate);
     }
 
@@ -55,6 +59,7 @@ public class BookController {
 
     @DeleteMapping(DELETE_BOOK)
     public AckDto deleteBook(@PathVariable Long book_id){
-        return bookService.deleteBook(book_id);
+        messageSender.sendDeleteBookMessage(book_id);
+        return AckDto.makeDefault(true);
     }
 }
